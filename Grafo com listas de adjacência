@@ -5,8 +5,13 @@ typedef struct adjacencia{
     int peso;
     struct adjacencia *prox;
 }ADJACENCIA;
+typedef struct adjacenciasp{
+    int vertice;
+    struct adjacenciasp *prox;
+}ADJACENCIASP;
 typedef struct vertice{
     ADJACENCIA *cad;
+    ADJACENCIASP *cadsp;
 }VERTICE;
 typedef struct grafo{
     int vertices;
@@ -30,7 +35,13 @@ ADJACENCIA* criarAdjacencia(int v, int peso){
     tmp->prox=NULL;
     return tmp;
 }
-bool criarArestaDir(GRAFO* grf,int vi,int vf,int p){
+ADJACENCIASP* criarAdjacenciasp(int v){
+    ADJACENCIASP* tmp=new(ADJACENCIASP);
+    tmp->vertice=v;
+    tmp->prox=NULL;
+    return tmp;
+}
+bool criarArestaDirP(GRAFO* grf,int vi,int vf,int p){
     if(!grf){
         return false;
     }
@@ -46,7 +57,7 @@ bool criarArestaDir(GRAFO* grf,int vi,int vf,int p){
     grf->arestas++;
     return true;
 }
-bool criarArestaNDir(GRAFO* grf,int vi,int vf,int p){
+bool criarArestaNDirP(GRAFO* grf,int vi,int vf,int p){
     if(!grf){
         return false;
     }
@@ -62,6 +73,41 @@ bool criarArestaNDir(GRAFO* grf,int vi,int vf,int p){
     ADJACENCIA* n2=criarAdjacencia(vf,p);
     n2->prox=grf->vrtc[vi].cad;
     grf->vrtc[vi].cad=n2;
+    grf->arestas++;
+    return true;
+}
+bool criarArestaDirSP(GRAFO* grf,int vi,int vf){
+    if(!grf){
+        return false;
+    }
+    if((vf<0)||(vf>=grf->vertices)){
+        return false;
+    }
+    if((vi<0)||(vi>=grf->vertices)){
+        return false;
+    }
+    ADJACENCIASP* novo=criarAdjacenciasp(vf);
+    novo->prox=grf->vrtc[vi].cadsp;
+    grf->vrtc[vi].cadsp=novo;
+    grf->arestas++;
+    return true;
+}
+bool criarArestaNDirSP(GRAFO* grf,int vi,int vf){
+    if(!grf){
+        return false;
+    }
+    if((vf<0)||(vf>=grf->vertices)){
+        return false;
+    }
+    if((vi<0)||(vi>=grf->vertices)){
+        return false;
+    }
+    ADJACENCIASP* n1=criarAdjacenciasp(vf);
+    n1->prox=grf->vrtc[vi].cadsp;
+    grf->vrtc[vi].cadsp=n1;
+    ADJACENCIASP* n2=criarAdjacenciasp(vf);
+    n2->prox=grf->vrtc[vi].cadsp;
+    grf->vrtc[vi].cadsp=n2;
     grf->arestas++;
     return true;
 }
@@ -111,21 +157,39 @@ void imprimir(GRAFO* grf){
 }
 int main(){
     GRAFO* grf1=criarGrafo(5);
-    criarArestaDir(grf1,0,1,20);
-    criarArestaDir(grf1,1,2,40);
-    criarArestaDir(grf1,2,0,12);
-    criarArestaDir(grf1,2,4,40);
-    criarArestaDir(grf1,3,1,30);
-    criarArestaDir(grf1,4,3,80);
+    criarArestaDirP(grf1,0,1,20);
+    criarArestaDirP(grf1,1,2,40);
+    criarArestaDirP(grf1,2,0,12);
+    criarArestaDirP(grf1,2,4,40);
+    criarArestaDirP(grf1,3,1,30);
+    criarArestaDirP(grf1,4,3,80);
     imprimir(grf1);
     cout<<endl;
     GRAFO* grf2=criarGrafo(5);
-    criarArestaNDir(grf2,0,1,20);
-    criarArestaNDir(grf2,1,2,40);
-    criarArestaNDir(grf2,2,0,12);
-    criarArestaNDir(grf2,2,4,40);
-    criarArestaNDir(grf2,3,1,30);
-    criarArestaNDir(grf2,4,3,80);
+    criarArestaNDirP(grf2,0,1,20);
+    criarArestaNDirP(grf2,1,2,40);
+    criarArestaNDirP(grf2,2,0,12);
+    criarArestaNDirP(grf2,2,4,40);
+    criarArestaNDirP(grf2,3,1,30);
+    criarArestaNDirP(grf2,4,3,80);
     imprimir(grf2);
+    cout<<endl;
+    GRAFO* grf3=criarGrafo(5);
+    criarArestaDirSP(grf3,0,1);
+    criarArestaDirSP(grf3,1,2);
+    criarArestaDirSP(grf3,2,0);
+    criarArestaDirSP(grf3,2,4);
+    criarArestaDirSP(grf3,3,1);
+    criarArestaDirSP(grf3,4,3);
+    imprimir(grf3);
+    cout<<endl;
+    GRAFO* grf4=criarGrafo(5);
+    criarArestaNDirSP(grf4,0,1);
+    criarArestaNDirSP(grf4,1,2);
+    criarArestaNDirSP(grf4,2,0);
+    criarArestaNDirSP(grf4,2,4);
+    criarArestaNDirSP(grf4,3,1);
+    criarArestaNDirSP(grf4,4,3);
+    imprimir(grf4);
     return 0;
 }
