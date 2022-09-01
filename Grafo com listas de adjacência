@@ -1,0 +1,131 @@
+#include <iostream>
+using namespace std;
+typedef struct adjacencia{
+    int vertice;
+    int peso;
+    struct adjacencia *prox;
+}ADJACENCIA;
+typedef struct vertice{
+    ADJACENCIA *cad;
+}VERTICE;
+typedef struct grafo{
+    int vertices;
+    int arestas;
+    VERTICE *vrtc;
+}GRAFO;
+GRAFO* criarGrafo(int v){
+    GRAFO* grf=new(GRAFO);
+    grf->vertices=v;
+    grf->arestas=0;
+    grf->vrtc=new VERTICE[v];
+    for(int i=0;i<v;i++){
+        grf->vrtc[i].cad=NULL;
+    }
+    return grf;
+}
+ADJACENCIA* criarAdjacencia(int v, int peso){
+    ADJACENCIA* tmp=new(ADJACENCIA);
+    tmp->vertice=v;
+    tmp->peso=peso;
+    tmp->prox=NULL;
+    return tmp;
+}
+bool criarArestaDir(GRAFO* grf,int vi,int vf,int p){
+    if(!grf){
+        return false;
+    }
+    if((vf<0)||(vf>=grf->vertices)){
+        return false;
+    }
+    if((vi<0)||(vi>=grf->vertices)){
+        return false;
+    }
+    ADJACENCIA* novo=criarAdjacencia(vf,p);
+    novo->prox=grf->vrtc[vi].cad;
+    grf->vrtc[vi].cad=novo;
+    grf->arestas++;
+    return true;
+}
+bool criarArestaNDir(GRAFO* grf,int vi,int vf,int p){
+    if(!grf){
+        return false;
+    }
+    if((vf<0)||(vf>=grf->vertices)){
+        return false;
+    }
+    if((vi<0)||(vi>=grf->vertices)){
+        return false;
+    }
+    ADJACENCIA* n1=criarAdjacencia(vf,p);
+    n1->prox=grf->vrtc[vi].cad;
+    grf->vrtc[vi].cad=n1;
+    ADJACENCIA* n2=criarAdjacencia(vf,p);
+    n2->prox=grf->vrtc[vi].cad;
+    grf->vrtc[vi].cad=n2;
+    grf->arestas++;
+    return true;
+}
+int grauNo(GRAFO* grf,int no){
+    int i=no-1,c=0;
+    ADJACENCIA* adj=grf->vrtc[i].cad;
+    while(adj){
+        c++;
+        adj=adj->prox;
+    }
+    return c;
+}
+int grauNoEntrada(GRAFO* grf,int no){
+    int j=no-1,c=0;
+    for(int i=0;i<grf->vertices;i++){
+        ADJACENCIA* adj=grf->vrtc[i].cad;
+        while(adj){
+            if(adj->vertice==j){
+                c++;
+            }
+            adj=adj->prox;
+        }
+    }
+    return c;
+}
+bool existeAresta(GRAFO* grf,int vi,int vf){
+    ADJACENCIA* adj=grf->vrtc[vi].cad;
+    while(adj){
+        if(adj->vertice==vf){
+            return true;
+        }
+        adj=adj->prox;
+    }
+    return false;
+}
+void imprimir(GRAFO* grf){
+    cout<<"Vertices: "<<grf->vertices<<"\tArestas: "<<grf->arestas<<endl;
+    for(int i=0;i<grf->vertices;i++){
+        cout<<"v"<<i<<": ";
+        ADJACENCIA* adj=grf->vrtc[i].cad;
+        while(adj){
+            cout<<"v"<<adj->vertice<<"("<<adj->peso<<")";
+            adj=adj->prox;
+        }
+        cout<<endl;
+    }
+}
+int main(){
+    GRAFO* grf1=criarGrafo(5);
+    criarArestaDir(grf1,0,1,20);
+    criarArestaDir(grf1,1,2,40);
+    criarArestaDir(grf1,2,0,12);
+    criarArestaDir(grf1,2,4,40);
+    criarArestaDir(grf1,3,1,30);
+    criarArestaDir(grf1,4,3,80);
+    imprimir(grf1);
+    cout<<endl;
+    GRAFO* grf2=criarGrafo(5);
+    criarArestaNDir(grf2,0,1,20);
+    criarArestaNDir(grf2,1,2,40);
+    criarArestaNDir(grf2,2,0,12);
+    criarArestaNDir(grf2,2,4,40);
+    criarArestaNDir(grf2,3,1,30);
+    criarArestaNDir(grf2,4,3,80);
+    imprimir(grf2);
+    return 0;
+}
