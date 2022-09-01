@@ -143,13 +143,25 @@ bool existeAresta(GRAFO* grf,int vi,int vf){
     }
     return false;
 }
-void imprimir(GRAFO* grf){
+void imprimirP(GRAFO* grf){
     cout<<"Vertices: "<<grf->vertices<<"\tArestas: "<<grf->arestas<<endl;
     for(int i=0;i<grf->vertices;i++){
         cout<<"v"<<i<<": ";
         ADJACENCIA* adj=grf->vrtc[i].cad;
         while(adj){
             cout<<"v"<<adj->vertice<<"("<<adj->peso<<")";
+            adj=adj->prox;
+        }
+        cout<<endl;
+    }
+}
+void imprimirSP(GRAFO* grf){
+    cout<<"Vertices: "<<grf->vertices<<"\tArestas: "<<grf->arestas<<endl;
+    for(int i=0;i<grf->vertices;i++){
+        cout<<"v"<<i<<": ";
+        ADJACENCIASP* adj=grf->vrtc[i].cadsp;
+        while(adj){
+            cout<<"v"<<adj->vertice;
             adj=adj->prox;
         }
         cout<<endl;
@@ -163,7 +175,7 @@ int main(){
     criarArestaDirP(grf1,2,4,40);
     criarArestaDirP(grf1,3,1,30);
     criarArestaDirP(grf1,4,3,80);
-    imprimir(grf1);
+    imprimirP(grf1);
     cout<<endl;
     GRAFO* grf2=criarGrafo(5);
     criarArestaNDirP(grf2,0,1,20);
@@ -172,7 +184,7 @@ int main(){
     criarArestaNDirP(grf2,2,4,40);
     criarArestaNDirP(grf2,3,1,30);
     criarArestaNDirP(grf2,4,3,80);
-    imprimir(grf2);
+    imprimirP(grf2);
     cout<<endl;
     GRAFO* grf3=criarGrafo(5);
     criarArestaDirSP(grf3,0,1);
@@ -181,7 +193,7 @@ int main(){
     criarArestaDirSP(grf3,2,4);
     criarArestaDirSP(grf3,3,1);
     criarArestaDirSP(grf3,4,3);
-    imprimir(grf3);
+    imprimirSP(grf3);
     cout<<endl;
     GRAFO* grf4=criarGrafo(5);
     criarArestaNDirSP(grf4,0,1);
@@ -190,6 +202,6 @@ int main(){
     criarArestaNDirSP(grf4,2,4);
     criarArestaNDirSP(grf4,3,1);
     criarArestaNDirSP(grf4,4,3);
-    imprimir(grf4);
+    imprimirSP(grf4);
     return 0;
 }
