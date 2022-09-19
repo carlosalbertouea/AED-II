@@ -43,6 +43,17 @@ bool criarAresta(GRAFO* grf,int vi,int vf){
     }
     return true;
 }
+void busca_dfs_recursiva(GRAFO* grf,int no,bool v[],int t){
+    v[no]=true;
+    cout<<"No "<<no+1<<" visitado"<<endl;
+    int pilha=no;
+    for(int j=0; j<t;j++){
+        if((grf->adj[pilha][j]!=0)&&(v[j]==false)){
+            dfs_busca_recursiva(grf,j,v,t);
+        }
+    }
+    cout<<"Terminou com o no "<<no+1<<endl;
+}
 bool apagarAresta(GRAFO* grf,int vi,int vf){
     if(!grf){
         return false;
@@ -105,40 +116,10 @@ bool excluirVertice(PILHA* p){
     delete(i);
     return true;
 }
-void busca_dfs_recursiva(GRAFO* grf, int no, bool v[], int t){
-    v[no]=true;
-    cout<<"No "<<no+1<<" visitado"<<endl;
-    int pilha=no;
-    for(int j=0; j<t;j++){
-        if((grf->adj[pilha][j]!=0)&&(v[j]==false)){
-            dfs_busca_recursiva(grf,j,v,t);
-        }
-    }
-    cout<<"Terminou com o no "<<no+1<<endl;
-}
-void visitar_dfs_iterativo(GRAFO* grf, int no, bool v[]){
-    PILHA p;
-    int v_atual;
-    int abj[grf->vertices];
-    iniciaPilha(&p);
-    inserirVertice(&p,no);
-    v[no]=true;
-    cout<<"No "<<no<<" visitado"<<endl;
-    while(tamanhoPilha(&p)!=0){
-        v_atual=excluirVertice(&p).vertice; não sei
-        int pilha=no;
-        for(int j=0; j<t;j++){
-            if((grf->adj[pilha][j]!=0)&&(v[j]==false)){
-                v[j]=true;
-                cout<<"No "<<j+1<<" visitado"<<endl;
-                inserirVertice(&p,j);
-            }
-        }
-    }
-    cout<<"Terminou com o no "<<no+1<<endl;
-}
 int main(){
-    GRAFO* grf=criarGrafo(5);
+    int t=5;
+    int arvores=0;
+    GRAFO* grf=criarGrafo(t);
     imprimirGrafo(grf);
     cout<<endl;
     criarAresta(grf,1,0);
@@ -153,5 +134,17 @@ int main(){
     imprimirGrafo(grf);
     cout<<"\nArestas"<<endl;
     imprimirArestas(grf);
+    bool visitados[t];
+    for(int i=0;i<t;i++){
+        visitados[i]=false;
+    }
+    for(int i=0;i<t;i++){
+        if(visitados[i]==false){
+            dfs_busca_recursiva(grf,i,visitados,t);
+            arvores++;
+        }
+        i++;
+    }
+    cout<<"Arvores: "<<arvores<<endl;
     return 0;
 }
